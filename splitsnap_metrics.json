@@ -1,0 +1,43 @@
+{
+  "model": "Donut-base",
+  "stage_1": "SROIE fine-tuning",
+  "stage_2": "CORD SplitSnap fine-tuning",
+  "image_size": [
+    1280,
+    960
+  ],
+  "max_length": 768,
+  "sroie_validation_loss_before": 5.342720413208008,
+  "sroie_validation_loss_after": 0.13100698680616915,
+  "epoch1_validation": {
+    "valid_json_rate": 0.8958,
+    "grand_total_exact": 0.8438,
+    "subtotal_exact": 0.8229,
+    "exact_charge_set": 0.5833,
+    "charge_precision": 0.8889,
+    "charge_recall": 0.2,
+    "charge_f1": 0.3265,
+    "exact_item_name_lists": 0.5938
+  },
+  "epoch2_validation": {
+    "valid_json_rate": 0.9896,
+    "grand_total_exact": 0.9688,
+    "subtotal_exact": 0.9062,
+    "exact_charge_set": 0.9271,
+    "charge_precision": 0.9038,
+    "charge_recall": 0.9216,
+    "charge_f1": 0.9126,
+    "exact_item_name_lists": 0.75
+  },
+  "final_test": {
+    "examples": 94,
+    "valid_json_rate": 0.9362,
+    "grand_total_exact": 0.9149,
+    "subtotal_exact": 0.8511,
+    "exact_charge_set": 0.8511,
+    "charge_precision": 0.8333,
+    "charge_recall": 0.8696,
+    "charge_f1": 0.8511,
+    "exact_item_name_lists": 0.6277
+  }
+}
