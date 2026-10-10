@@ -16,7 +16,7 @@ It uses a fine-tuned **Donut** model to convert receipt images into structured b
   - taxes / fees / discounts
   - grand total
 - Manual correction UI
-- Automatic bill consistency check
+- Automatic bill consistency checking
 - Shared-item assignment
 - Proportional tax / fee / discount splitting
 - Per-person explanation
@@ -32,6 +32,8 @@ Fine-tuned Donut
 Structured Bill JSON
    ↓
 Manual Correction
+   ↓
+Consistency Check
    ↓
 Add People + Assign Items
    ↓
@@ -53,9 +55,9 @@ Fine-tuning was done in two stages:
 
 A second CORD epoch oversampled receipts containing taxes, service charges, and discounts because the first model had low charge recall.
 
-## Final Test Results
+### Final Test Results
 
-Evaluated on 94 untouched CORD test receipts.
+Evaluated on **94 untouched CORD test receipts**.
 
 | Metric | Result |
 |---|---:|
@@ -63,10 +65,30 @@ Evaluated on 94 untouched CORD test receipts.
 | Exact grand total | 91.49% |
 | Exact subtotal | 85.11% |
 | Exact charge set | 85.11% |
+| Charge precision | 83.33% |
+| Charge recall | 86.96% |
 | Charge F1 | 85.11% |
 | Exact item-name list | 62.77% |
 
-Charge-focused fine-tuning improved validation charge F1 from **32.65% → 91.26%**.
+Charge-focused fine-tuning improved validation charge F1 from **32.65% to 91.26%**.
+
+## Model Checkpoint
+
+The trained SplitSnap Donut checkpoint is hosted on Hugging Face:
+
+`prakursh/splitsnap-donut`
+
+The repository ID is also stored in:
+
+```text
+hf_model_repo.txt
+```
+
+When the app starts, Hugging Face Transformers automatically downloads the model.
+
+No manual model download is required.
+
+> The first launch may take longer because the checkpoint is approximately 758 MB.
 
 ## Bill Splitting
 
@@ -89,7 +111,7 @@ Alice = ₹770
 Bob   = ₹330
 ```
 
-Discounts are handled the same way using negative values.
+Discounts are handled in the same way using negative values.
 
 ## Consistency Check
 
@@ -99,14 +121,14 @@ SplitSnap checks whether:
 subtotal + charges ≈ grand total
 ```
 
-If the values do not match, it warns the user about a possible missing:
+If the values do not match, the app shows the unexplained amount and warns about a possible missing:
 
 - discount
 - tax
 - service charge
 - other adjustment
 
-This prevents a bad extraction from silently producing a wrong split.
+This prevents an incorrect extraction from silently producing an incorrect split.
 
 ## Installation
 
@@ -121,17 +143,13 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
 pip install -r requirements.txt
 ```
 
-Place the trained checkpoint in:
-
-```text
-splitsnap_model/
-```
-
-Then run:
+## Run
 
 ```powershell
 python -m streamlit run app.py
 ```
+
+On the first launch, the trained Donut model is downloaded automatically from Hugging Face.
 
 ## Project Structure
 
@@ -141,16 +159,17 @@ splitSnap/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
+├── hf_model_repo.txt
+├── upload_model.py
 ├── splitsnap_metrics.json
-├── samples/
-└── splitsnap_model/   # not tracked in Git
+└── SplitSnap_presentation.pptx
 ```
 
 ## Limitations
 
-The model was mainly trained on CORD and SROIE receipts, so unusual real-world layouts, currencies, fonts, or poor image quality may reduce extraction quality.
+The model was mainly trained on CORD and SROIE receipts, so unusual real-world layouts, currencies, fonts, languages, or poor image quality may reduce extraction quality.
 
-For that reason, SplitSnap treats AI output as a draft and always allows user correction before splitting.
+For this reason, SplitSnap treats AI output as a draft and provides a manual correction step before bill splitting.
 
 ## Tech Stack
 
@@ -163,12 +182,11 @@ For that reason, SplitSnap treats AI output as a draft and always allows user co
 - CORD
 - SROIE
 
-
 ## Future Improvements
+
 - Fine-tune on Indian receipt datasets
-- Receipt image augmentation for blur and perspective distortion
+- Blur and perspective augmentation
 - Confidence estimation
-- Automatic JSON repair
-- Better out-of-distribution detection
-- Mobile-friendly interface
-- Persistent bill history
+- Better JSON repair
+- Out-of-distribution detection
+- Mobile-friendly UI

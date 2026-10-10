@@ -6,3 +6,4 @@ Pillow==12.3.0
 sentencepiece==0.2.2
 safetensors==0.8.0
 huggingface_hub==1.33.0
+torchvision==0.29.1
