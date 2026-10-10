@@ -14,7 +14,14 @@ from transformers import VisionEncoderDecoderModel
 # CONFIG
 # ============================================================
 
-MODEL_PATH = "splitsnap_model"
+MODEL_REPO_FILE = "hf_model_repo.txt"
+
+with open(
+    MODEL_REPO_FILE,
+    "r",
+    encoding="utf-8"
+) as f:
+    MODEL_PATH = f.read().strip()
 MAX_LENGTH = 768
 
 
